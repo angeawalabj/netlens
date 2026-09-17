@@ -1,0 +1,145 @@
+# .github/workflows/ci.yml
+# Tests automatiques sur chaque push et pull request
+
+name: CI
+
+on:
+  push:
+    branches: [main, develop, 'feat/**', 'fix/**']
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ── Tests JavaScript ────────────────────────────────
+  test-js:
+    name: JS Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run structural tests (fast, Node only)
+        run: node scripts/test.js
+
+      - name: Run unit tests (vitest)
+        run: npx vitest run packages/core/tests/
+
+  # ── Build vérification ──────────────────────────────
+  build:
+    name: Build Check
+    runs-on: ubuntu-latest
+    needs: test-js
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build all apps
+        run: npm run build
+
+      - name: Verify outputs exist
+        run: |
+          for app in hub sandbox quiz xray; do
+            test -f "dist/$app/index.html" && echo "✓ dist/$app/index.html" || exit 1
+          done
+
+  # ── Rust capture engine ─────────────────────────────
+  test-rust:
+    name: Rust Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: sudo apt-get install -y libpcap-dev pkg-config
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          components: rustfmt, clippy
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            capture/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('capture/Cargo.toml') }}
+
+      - name: Check formatting
+        working-directory: capture
+        run: cargo fmt --check
+
+      - name: Clippy (lint)
+        working-directory: capture
+        run: cargo clippy -- -D warnings
+
+      - name: Build debug
+        working-directory: capture
+        run: cargo build
+
+      - name: Run tests
+        working-directory: capture
+        run: cargo test
+
+  # ── Deploy GitHub Pages (main seulement) ────────────
+  deploy:
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    needs: [test-js, build]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install and build
+        run: |
+          npm ci
+          npm run build
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/hub
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

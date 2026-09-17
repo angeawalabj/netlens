@@ -1,0 +1,29 @@
+{
+  "name": "netlens",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Protocol intelligence — learn, observe, understand networks",
+  "license": "Apache-2.0",
+  "workspaces": [
+    "packages/core",
+    "packages/ui",
+    "packages/sandbox",
+    "packages/quiz",
+    "packages/xray",
+    "packages/hub"
+  ],
+  "scripts": {
+    "dev": "node scripts/dev.js",
+    "build": "node scripts/build.js",
+    "test": "node scripts/test.js",
+    "lint": "node scripts/lint.js",
+    "clean": "rm -rf packages/*/dist"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.0",
+    "vitest": "^4.1.8"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

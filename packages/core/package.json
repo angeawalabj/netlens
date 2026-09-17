@@ -1,0 +1,16 @@
+{
+  "name": "@netlens/core",
+  "version": "0.1.0",
+  "description": "Pure business logic — protocols, quiz engine, anomaly rules. Zero UI, zero DOM.",
+  "main": "src/index.js",
+  "exports": {
+    ".":              "./src/index.js",
+    "./protocols":    "./src/protocols/index.js",
+    "./protocols/*":  "./src/protocols/*.js",
+    "./quiz":         "./src/quiz/index.js",
+    "./anomaly":      "./src/anomaly/index.js"
+  },
+  "scripts": {
+    "test": "vitest run tests/"
+  }
+}

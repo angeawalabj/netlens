@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NetLens — Protocol Assessment</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../ui/src/design-system/index.css">
+  <link rel="stylesheet" href="src/quiz.css">
+</head>
+<body class="app-shell">
+
+  <header class="topbar">
+    <a href="../hub/index.html" class="topbar__logo">
+      <div class="topbar__logo-mark">NL</div>NetLens
+    </a>
+    <nav class="topbar__tabs">
+      <a href="../sandbox/index.html" class="topbar__tab">Sandbox</a>
+      <a href="../xray/index.html"    class="topbar__tab">X-Ray</a>
+      <div class="topbar__tab topbar__tab--active">Assessment</div>
+    </nav>
+    <div class="topbar__right">
+      <div class="timer-chip font-mono" id="timerChip" hidden>—</div>
+      <div class="score-chip font-mono" id="scoreChip" hidden>0 pts</div>
+    </div>
+  </header>
+
+  <div class="progress-bar">
+    <div class="progress-bar__fill" id="progressFill"></div>
+  </div>
+
+  <!-- START SCREEN -->
+  <div id="screenStart" class="screen">
+    <div class="start-layout">
+      <div class="start-eyebrow font-mono">NetLens · 30-Day Curriculum</div>
+      <h1 class="start-title">Protocol Assessment</h1>
+      <p class="start-desc">
+        90 questions built for engineers — not memorization drills.
+        Five cognitive levels: recall, analysis, troubleshooting,
+        packet inspection, and architecture decisions.
+      </p>
+
+      <div class="filter-label font-mono">Mode</div>
+      <div class="mode-grid" id="modeGrid">
+        <div class="mode-card mode-card--active" data-mode="normal"  data-action="set-mode" data-payload="normal">
+          <div class="mode-card__icon">◈</div>
+          <div class="mode-card__name">Full Assessment</div>
+          <div class="mode-card__desc">All questions, no time limit</div>
+          <div class="mode-card__meta font-mono">90 questions</div>
+        </div>
+        <div class="mode-card" data-mode="exam"   data-action="set-mode" data-payload="exam">
+          <div class="mode-card__icon">⏱</div>
+          <div class="mode-card__name">Timed Exam</div>
+          <div class="mode-card__desc">45 seconds per question</div>
+          <div class="mode-card__meta font-mono">45 min total</div>
+        </div>
+        <div class="mode-card" data-mode="weak"   data-action="set-mode" data-payload="weak">
+          <div class="mode-card__icon">⚑</div>
+          <div class="mode-card__name">Weak Spots</div>
+          <div class="mode-card__desc">Questions you got wrong</div>
+          <div class="mode-card__meta font-mono" id="weakCount">— questions</div>
+        </div>
+        <div class="mode-card" data-mode="sprint" data-action="set-mode" data-payload="sprint">
+          <div class="mode-card__icon">↯</div>
+          <div class="mode-card__name">Sprint</div>
+          <div class="mode-card__desc">20 random questions</div>
+          <div class="mode-card__meta font-mono">~10 minutes</div>
+        </div>
+      </div>
+
+      <div class="filter-label font-mono">Filter by type</div>
+      <div class="filter-row">
+        <button class="chip chip--active" data-type-filter="all"  data-action="set-type-filter" data-payload="all">All types</button>
+        <button class="chip" data-type-filter="1" data-action="set-type-filter" data-payload="1">T1 — Recall</button>
+        <button class="chip" data-type-filter="2" data-action="set-type-filter" data-payload="2">T2 — Analysis</button>
+        <button class="chip" data-type-filter="3" data-action="set-type-filter" data-payload="3">T3 — Troubleshoot</button>
+        <button class="chip" data-type-filter="4" data-action="set-type-filter" data-payload="4">T4 — Packets</button>
+        <button class="chip" data-type-filter="5" data-action="set-type-filter" data-payload="5">T5 — Decisions</button>
+      </div>
+
+      <div class="filter-label font-mono" style="margin-top:20px">Filter by week</div>
+      <div class="filter-row">
+        <button class="chip chip--active" data-week-filter="all" data-action="set-week-filter" data-payload="all">All weeks</button>
+        <button class="chip" data-week-filter="1" data-action="set-week-filter" data-payload="1">W1 — Foundations</button>
+        <button class="chip" data-week-filter="2" data-action="set-week-filter" data-payload="2">W2 — Transport</button>
+        <button class="chip" data-week-filter="3" data-action="set-week-filter" data-payload="3">W3 — Web</button>
+        <button class="chip" data-week-filter="4" data-action="set-week-filter" data-payload="4">W4 — Infra & IoT</button>
+      </div>
+
+      <button class="btn btn--primary start-btn" data-action="start">
+        Start Assessment
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- QUESTION SCREEN -->
+  <div id="screenQuestion" class="screen" hidden>
+    <div class="q-layout">
+      <aside class="q-nav-panel">
+        <div class="panel__bar">
+          <span class="panel__title">Questions</span>
+        </div>
+        <div class="panel__body">
+          <div id="questionNav" class="nav-dot-grid"></div>
+          <div id="navStats" class="nav-stats"></div>
+        </div>
+      </aside>
+
+      <div class="q-main-scroll">
+        <div class="q-inner">
+          <div class="q-breadcrumb" id="qBreadcrumb"></div>
+          <div class="q-text"    id="qText"></div>
+          <pre class="q-context" id="qContext" hidden></pre>
+          <div class="q-multi-note font-mono" id="qMultiNote" hidden>
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+            </svg>
+            Multiple correct answers
+          </div>
+          <div class="choices" id="choices"></div>
+          <div class="explanation" id="explanation" hidden></div>
+          <div class="q-actions">
+            <button class="btn btn--primary"   id="btnValidate" data-action="validate">Validate</button>
+            <button class="btn btn--secondary" id="btnNext"     data-action="next"     hidden>Next →</button>
+            <button class="skip-btn font-mono" id="btnSkip"     data-action="skip">Skip</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS SCREEN -->
+  <div id="screenResults" class="screen" hidden>
+    <div class="results-layout">
+      <div class="results-hero">
+        <svg class="results-ring" viewBox="0 0 120 120">
+          <circle class="results-ring__bg" cx="60" cy="60" r="50"/>
+          <circle class="results-ring__arc" id="ringArc" cx="60" cy="60" r="50"
+            stroke="#3b82f6" stroke-dasharray="314" stroke-dashoffset="314"/>
+          <text class="results-ring__val font-mono" id="ringScore" x="60" y="56" text-anchor="middle" dominant-baseline="middle">—</text>
+          <text class="results-ring__tot font-mono" id="ringTotal" x="60" y="73" text-anchor="middle">/ 0</text>
+        </svg>
+        <div class="results-summary">
+          <div class="results-verdict" id="verdict"></div>
+          <div class="results-desc"    id="verdictDesc"></div>
+          <div class="results-stats"   id="resultStats"></div>
+        </div>
+      </div>
+
+      <div class="results-section-title font-mono">Score by type</div>
+      <div class="breakdown" id="byType"></div>
+
+      <div class="results-section-title font-mono">Review</div>
+      <div class="review-list" id="reviewList"></div>
+
+      <div class="results-actions">
+        <button class="btn btn--primary"   data-action="restart">Restart</button>
+        <button class="btn btn--secondary" data-action="review-wrong">Review errors</button>
+        <button class="btn btn--secondary" data-action="go-start">Home</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>

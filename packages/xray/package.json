@@ -1,0 +1,7 @@
+{
+  "name": "@netlens/xray",
+  "version": "0.1.0",
+  "description": "Network X-Ray — real-time traffic dashboard",
+  "private": true,
+  "type": "module"
+}

@@ -1,0 +1,7 @@
+{
+  "name": "@netlens/hub",
+  "version": "0.1.0",
+  "description": "NetLens landing page",
+  "private": true,
+  "type": "module"
+}

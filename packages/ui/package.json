@@ -1,0 +1,17 @@
+{
+  "name": "@netlens/ui",
+  "version": "0.1.0",
+  "description": "Design system and reusable UI components. No business logic.",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./components/dom.js":                          "./src/components/dom.js",
+    "./components/PacketFlow/PacketFlow.js":         "./src/components/PacketFlow/PacketFlow.js",
+    "./components/Inspector/Inspector.js":           "./src/components/Inspector/Inspector.js",
+    "./components/Alert/Alert.js":                   "./src/components/Alert/Alert.js",
+    "./components/Timeline/Timeline.js":             "./src/components/Timeline/Timeline.js",
+    "./components/QuizCard/QuizCard.js":             "./src/components/QuizCard/QuizCard.js",
+    "./design-system/tokens.css":                    "./src/design-system/tokens.css",
+    "./design-system/index.css":                     "./src/design-system/index.css"
+  }
+}

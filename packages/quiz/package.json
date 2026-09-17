@@ -1,0 +1,7 @@
+{
+  "name": "@netlens/quiz",
+  "version": "0.1.0",
+  "description": "Protocol Assessment — 90-question adaptive quiz",
+  "private": true,
+  "type": "module"
+}

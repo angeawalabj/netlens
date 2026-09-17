@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NetLens — Network X-Ray</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../ui/src/design-system/index.css">
+  <link rel="stylesheet" href="src/xray.css">
+</head>
+<body class="app-shell">
+
+  <header class="topbar">
+    <a href="../hub/index.html" class="topbar__logo">
+      <div class="topbar__logo-mark">NL</div>NetLens
+    </a>
+    <nav class="topbar__tabs">
+      <a href="../sandbox/index.html" class="topbar__tab">Sandbox</a>
+      <div class="topbar__tab topbar__tab--active">X-Ray</div>
+      <a href="../quiz/index.html" class="topbar__tab">Assessment</a>
+    </nav>
+    <div class="topbar__right">
+      <div class="live-badge" id="wsBadge">
+        <div class="live-badge__dot"></div>
+        LIVE · sim
+      </div>
+      <button class="btn btn--ghost" id="btnPause" data-action="toggle-pause">⏸ Pause</button>
+      <button class="btn btn--ghost" data-action="toggle-alerts">⚠ Alerts only</button>
+    </div>
+  </header>
+
+  <!-- METRICS ROW -->
+  <div class="metrics-row">
+    <div class="metric"><span class="metric__icon">↓</span>
+      <div class="metric__body"><div class="metric__val" id="mDown">0.0 Mb/s</div><div class="metric__label font-mono">Inbound</div></div>
+      <canvas class="metric__spark" id="spDown" width="80" height="28"></canvas>
+    </div>
+    <div class="metric"><span class="metric__icon">↑</span>
+      <div class="metric__body"><div class="metric__val" id="mUp">0.0 Mb/s</div><div class="metric__label font-mono">Outbound</div></div>
+      <canvas class="metric__spark" id="spUp" width="80" height="28"></canvas>
+    </div>
+    <div class="metric"><span class="metric__icon">⟷</span>
+      <div class="metric__body"><div class="metric__val" id="mConns">0</div><div class="metric__label font-mono">Active flows</div></div>
+    </div>
+    <div class="metric"><span class="metric__icon">⬡</span>
+      <div class="metric__body"><div class="metric__val" id="mDNS">0</div><div class="metric__label font-mono">DNS req/min</div></div>
+    </div>
+    <div class="metric"><span class="metric__icon">⚑</span>
+      <div class="metric__body"><div class="metric__val" id="mAlerts">0</div><div class="metric__label font-mono">Alerts</div></div>
+    </div>
+    <div class="metric"><span class="metric__icon">%</span>
+      <div class="metric__body"><div class="metric__val" id="mTLS">0%</div><div class="metric__label font-mono">TLS coverage</div></div>
+    </div>
+    <div class="metric metric--wide"><span class="metric__icon">Σ</span>
+      <div class="metric__body"><div class="metric__val" id="mBytes">0 B</div><div class="metric__label font-mono">Total transferred</div></div>
+    </div>
+  </div>
+
+  <!-- WORKSPACE -->
+  <div class="xray-workspace">
+
+    <!-- DEVICE LIST -->
+    <aside class="panel">
+      <div class="panel__bar">
+        <span class="panel__title">Devices</span>
+        <span class="panel__count" id="devCount"></span>
+        <div style="margin-left:auto">
+          <button class="btn btn--ghost" data-action="toggle-suspect">Suspect</button>
+        </div>
+      </div>
+      <div class="panel__body" id="deviceList"></div>
+    </aside>
+
+    <!-- CONNECTION TABLE -->
+    <div class="panel conn-panel">
+      <div class="panel__bar">
+        <span class="panel__title">Connections</span>
+        <span class="panel__count" id="connCount"></span>
+        <div style="margin-left:auto">
+          <button class="btn btn--ghost" data-action="toggle-alerts">Alerts</button>
+        </div>
+      </div>
+      <div class="conn-table">
+        <div class="ct-head">
+          <div class="ct-th font-mono" data-action="sort" data-payload="proto">Protocol</div>
+          <div class="ct-th font-mono" data-action="sort" data-payload="src">Source</div>
+          <div class="ct-th font-mono" data-action="sort" data-payload="dst">Destination</div>
+          <div class="ct-th font-mono ct-th--center">CC</div>
+          <div class="ct-th font-mono ct-th--right" data-action="sort" data-payload="bytes">Bytes ↓</div>
+          <div class="ct-th font-mono ct-th--right" data-action="sort" data-payload="duration">Duration</div>
+          <div class="ct-th font-mono ct-th--center">⚑</div>
+        </div>
+        <div id="connRows"></div>
+      </div>
+    </div>
+
+    <!-- ALERTS + PROTO DIST -->
+    <aside class="panel detail-panel">
+      <div class="panel__bar">
+        <span class="panel__title">Alert stream</span>
+        <span class="panel__count" id="alertCount"></span>
+        <div style="margin-left:auto">
+          <button class="btn btn--ghost" data-action="clear-alerts">Clear</button>
+        </div>
+      </div>
+      <div class="panel__body" id="alertStream"></div>
+      <div class="proto-dist">
+        <div class="proto-dist__title font-mono">Protocol distribution</div>
+        <div id="protoDist"></div>
+      </div>
+    </aside>
+
+    <!-- TIMELINE -->
+    <div class="timeline-panel">
+      <div class="tl-bar">
+        <span class="tl-title font-mono">Bandwidth · 60s</span>
+        <div class="tl-legend">
+          <div class="tl-leg-item font-mono"><div class="tl-leg-dot" style="background:#22c55e"></div>In</div>
+          <div class="tl-leg-item font-mono"><div class="tl-leg-dot" style="background:#3b82f6"></div>Out</div>
+          <div class="tl-leg-item font-mono"><div class="tl-leg-dot" style="background:rgba(239,68,68,.5)"></div>Alert</div>
+        </div>
+        <div class="tl-stats">
+          <div class="tl-stat font-mono">Peak ↓ <span id="peakDown">0.0</span> Mb/s</div>
+          <div class="tl-stat font-mono">Peak ↑ <span id="peakUp">0.0</span> Mb/s</div>
+          <div class="tl-stat font-mono">Total <span id="totalBytes">0</span></div>
+        </div>
+      </div>
+      <canvas id="tlCanvas"></canvas>
+    </div>
+
+  </div><!-- /workspace -->
+
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>

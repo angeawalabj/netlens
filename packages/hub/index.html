@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NetLens — Protocol Intelligence for Engineers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../ui/src/design-system/index.css">
+  <link rel="stylesheet" href="src/hub.css">
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="hub-nav">
+    <div class="hub-nav__inner">
+      <a href="#" class="hub-nav__logo">
+        <div class="hub-nav__logo-mark">NL</div>
+        NetLens
+      </a>
+      <div class="hub-nav__links">
+        <a href="#modules"  class="hub-nav__link">Modules</a>
+        <a href="#curriculum" class="hub-nav__link">Curriculum</a>
+        <a href="https://github.com/netlens/netlens" class="hub-nav__link">GitHub</a>
+      </div>
+      <div class="hub-nav__right">
+        <span class="hub-nav__version font-mono">v0.1-alpha</span>
+        <a href="../sandbox/index.html" class="btn btn--primary hub-nav__cta">
+          Launch Sandbox →
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero__inner">
+      <div class="hero__copy">
+        <div class="hero__label font-mono">
+          <span class="hero__label-dot"></span>
+          Open-source · Apache 2.0
+        </div>
+        <h1 class="hero__title">
+          Protocol intelligence<br>
+          <em>for engineers who ship.</em>
+        </h1>
+        <p class="hero__desc">
+          Simulate TCP handshakes. Capture live traffic.
+          Debug DNS resolution chains. Test protocol decisions —
+          before you're on-call at 3 AM.
+        </p>
+        <div class="hero__actions">
+          <a href="../sandbox/index.html" class="btn btn--primary">
+            Open Sandbox →
+          </a>
+          <a href="../quiz/index.html" class="btn btn--secondary">
+            Run Assessment
+          </a>
+        </div>
+        <div class="hero__stats">
+          <div class="hero__stat">
+            <span class="hero__stat-val font-mono">5</span>
+            <span class="hero__stat-label">Protocols simulated</span>
+          </div>
+          <div class="hero__stat">
+            <span class="hero__stat-val font-mono">90</span>
+            <span class="hero__stat-label">Assessment questions</span>
+          </div>
+          <div class="hero__stat">
+            <span class="hero__stat-val font-mono">30</span>
+            <span class="hero__stat-label">Day curriculum</span>
+          </div>
+          <div class="hero__stat">
+            <span class="hero__stat-val font-mono">0</span>
+            <span class="hero__stat-label">Dependencies</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live packet stream panel -->
+      <div class="hero__panel">
+        <div class="hero__panel-bar">
+          <div class="hero__panel-dots">
+            <div class="hero__panel-dot"></div>
+            <div class="hero__panel-dot"></div>
+            <div class="hero__panel-dot"></div>
+          </div>
+          <span class="font-mono hero__panel-title">netlens — tls-sandbox</span>
+          <div class="live-badge">
+            <div class="live-badge__dot"></div>
+            LIVE
+          </div>
+        </div>
+        <div class="hero__panel-body" id="packetStream"></div>
+        <div class="hero__panel-footer font-mono">
+          <span>TLS 1.3 · 1 RTT handshake</span>
+          <span class="hero__panel-sep">·</span>
+          <span class="text-accent">OSI L4→L7</span>
+          <span class="hero__panel-sep">·</span>
+          <span>RTT 42ms</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODULES -->
+  <section class="modules-section" id="modules">
+    <div class="section-inner">
+      <div class="section-kicker font-mono">Modules</div>
+      <h2 class="section-heading">Four tools. One mental model.</h2>
+      <p class="section-desc">
+        Each module targets a different mode of understanding:
+        simulation, observation, assessment, and decision support.
+      </p>
+
+      <div class="modules-grid">
+
+        <a href="../sandbox/index.html" class="module-card">
+          <div class="module-card__header">
+            <span class="module-card__num font-mono">01</span>
+            <span class="module-card__status module-card__status--live">● Available</span>
+          </div>
+          <div class="module-card__title">Protocol Sandbox</div>
+          <div class="module-card__desc">
+            Step through protocol exchanges frame by frame.
+            Inspect every header field. Inject faults —
+            expired certificate, dropped SYN-ACK, NXDOMAIN —
+            and observe how each protocol responds.
+          </div>
+          <div class="module-card__specs">
+            <div class="module-card__spec">
+              <span class="module-card__spec-key font-mono">protocols</span>
+              <span class="module-card__spec-val font-mono">TCP · DNS · TLS 1.3 · HTTP/2 · MQTT</span>
+            </div>
+            <div class="module-card__spec">
+              <span class="module-card__spec-key font-mono">steps</span>
+              <span class="module-card__spec-val font-mono">37 annotated packet exchanges</span>
+            </div>
+            <div class="module-card__spec">
+              <span class="module-card__spec-key font-mono">faults</span>
+              <span class="module-card__spec-val font-mono text-success">15 injectable failure modes</span>
+            </div>
+          </div>
+          <div class="module-card__link font-mono text-accent">
+            Open Sandbox →
+          </div>
+        </a>
+
+        <a href="../xray/index.html" class="module-card">
+          <div class="module-card__header">
+            <span class="module-card__num font-mono">02</span>
+            <span class="module-card__status module-card__status--live">● Available</span>
+          </div>
+          <div class="module-card__title">Network X-Ray</div>
+          <div class="module-card__desc">
+            Real-time traffic dashboard. See every connection,
+            device, and protocol on your network.
+            Anomaly detection flags suspicious flows —
+            your camera sending 80 MB to an unexpected endpoint at 3 AM.
+          </div>
+          <div class="module-card__specs">
+            <div class="module-card__spec">
+              <span class="module-card__spec-key font-mono">backend</span>
+              <span class="module-card__spec-val font-mono text-accent">Rust · libpcap · eBPF</span>
+            </div>
+            <div class="module-card__spec">
+              <span class="module-card__spec-key font-mono">transport</span>
+              <span class="module-card__spec-val font-mono">WebSocket · JSON stream</span>
+            </div>
+            <div class="module-card__spec">
+              <span class="module-card__spec-key font-mono">detection</span>
+              <span class="module-card__spec-val font-mono text-success">DGA · exfil · MQTT drift</span>
+            </div>
+          </div>
+          <div class="module-card__link font-mono text-accent">
+            Open Dashboard →
+          </div>
+        </a>
+
+        <a href="../quiz/index.html" class="module-card">
+          <div class="module-card__header">
+            <span class="module-card__num font-mono">03</span>
+            <span class="module-card__status module-card__status--live">● Available</span>
+          </div>
+          <div class="module-card__title">Protocol Assessment</div>
+          <div class="module-card__desc">
+            90 questions across five cognitive levels — recall,
+            analysis, troubleshooting, packet inspection,
+            and architecture decisions. Built to surface gaps,
+            not test memorization.
+          </div>
+          <div class="module-card__specs">
+            <div class="module-card__spec">
+              <span class="module-card__spec-key font-mono">questions</span>
+              <span class="module-card__spec-val font-mono">90 across 5 types</span>
+            </div>
+            <div class="module-card__spec">
+              <span class="module-card__spec-key font-mono">modes</span>
+              <span class="module-card__spec-val font-mono">Normal · Exam · Weak spots · Sprint</span>
+            </div>
+            <div class="module-card__spec">
+              <span class="module-card__spec-key font-mono">memory</span>
+              <span class="module-card__spec-val font-mono text-success">Tracks weak areas across sessions</span>
+            </div>
+          </div>
+          <div class="module-card__link font-mono text-accent">
+            Start Assessment →
+          </div>
+        </a>
+
+        <div class="module-card module-card--disabled">
+          <div class="module-card__header">
+            <span class="module-card__num font-mono">04</span>
+            <span class="module-card__status module-card__status--soon">○ Roadmap v0.3</span>
+          </div>
+          <div class="module-card__title">Protocol Advisor</div>
+          <div class="module-card__desc">
+            Answer five questions about your constraints —
+            latency budget, reliability, battery life, device count —
+            and receive a protocol recommendation with rationale
+            and implementation scaffold.
+          </div>
+          <div class="module-card__specs">
+            <div class="module-card__spec">
+              <span class="module-card__spec-key font-mono">inputs</span>
+              <span class="module-card__spec-val font-mono">Bandwidth · Latency · Reliability · Power</span>
+            </div>
+            <div class="module-card__spec">
+              <span class="module-card__spec-key font-mono">output</span>
+              <span class="module-card__spec-val font-mono">Protocol + tradeoffs + starter code</span>
+            </div>
+          </div>
+          <div class="module-card__link font-mono text-3">In development</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CURRICULUM -->
+  <section class="curriculum-section" id="curriculum">
+    <div class="section-inner curriculum-grid">
+
+      <div class="curriculum-copy">
+        <div class="section-kicker font-mono">30-Day Curriculum</div>
+        <h2 class="section-heading">
+          From the cable<br>to the application layer.
+        </h2>
+        <p class="section-desc">
+          The curriculum mirrors how protocols actually compose —
+          from physical bits to application semantics.
+          Each chapter answers three questions: what problem does this solve,
+          is it stateful or stateless, and what does its header look like.
+        </p>
+        <a href="../../curriculum/fr/00-preface.md" class="btn btn--secondary">
+          Read the curriculum ↗
+        </a>
+      </div>
+
+      <div class="weeks-list">
+        <div class="week-item">
+          <div class="week-item__header">
+            <div class="week-item__num week-item__num--1">W1</div>
+            <div class="week-item__title">Foundations</div>
+            <div class="week-item__days font-mono">Days 1–7</div>
+          </div>
+          <div class="week-item__tags">
+            <span class="week-tag font-mono">OSI</span>
+            <span class="week-tag font-mono">TCP/IP</span>
+            <span class="week-tag font-mono">Ethernet</span>
+            <span class="week-tag font-mono">ARP</span>
+            <span class="week-tag font-mono">IPv4</span>
+            <span class="week-tag font-mono">IPv6</span>
+            <span class="week-tag font-mono">ICMP</span>
+          </div>
+        </div>
+
+        <div class="week-item">
+          <div class="week-item__header">
+            <div class="week-item__num week-item__num--2">W2</div>
+            <div class="week-item__title">Transport & Security</div>
+            <div class="week-item__days font-mono">Days 8–15</div>
+          </div>
+          <div class="week-item__tags">
+            <span class="week-tag font-mono">TCP</span>
+            <span class="week-tag font-mono">UDP</span>
+            <span class="week-tag font-mono">TLS 1.3</span>
+            <span class="week-tag font-mono">Congestion</span>
+            <span class="week-tag font-mono">DTLS</span>
+          </div>
+        </div>
+
+        <div class="week-item">
+          <div class="week-item__header">
+            <div class="week-item__num week-item__num--3">W3</div>
+            <div class="week-item__title">Web Protocols</div>
+            <div class="week-item__days font-mono">Days 16–23</div>
+          </div>
+          <div class="week-item__tags">
+            <span class="week-tag font-mono">HTTP/1.1</span>
+            <span class="week-tag font-mono">HTTP/2</span>
+            <span class="week-tag font-mono">HTTP/3</span>
+            <span class="week-tag font-mono">QUIC</span>
+            <span class="week-tag font-mono">DNS</span>
+            <span class="week-tag font-mono">WebSocket</span>
+            <span class="week-tag font-mono">WebRTC</span>
+          </div>
+        </div>
+
+        <div class="week-item">
+          <div class="week-item__header">
+            <div class="week-item__num week-item__num--4">W4</div>
+            <div class="week-item__title">Infrastructure & IoT</div>
+            <div class="week-item__days font-mono">Days 24–30</div>
+          </div>
+          <div class="week-item__tags">
+            <span class="week-tag font-mono">SSH</span>
+            <span class="week-tag font-mono">SFTP</span>
+            <span class="week-tag font-mono">SMTP</span>
+            <span class="week-tag font-mono">IMAP</span>
+            <span class="week-tag font-mono">MQTT</span>
+            <span class="week-tag font-mono">LoRaWAN</span>
+            <span class="week-tag font-mono">Wireshark</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="hub-footer">
+    <div class="hub-footer__inner">
+      <span class="hub-footer__logo font-mono">netlens</span>
+      <a href="../sandbox/index.html" class="hub-footer__link">Sandbox</a>
+      <a href="../xray/index.html"    class="hub-footer__link">X-Ray</a>
+      <a href="../quiz/index.html"    class="hub-footer__link">Assessment</a>
+      <a href="https://github.com/netlens/netlens" class="hub-footer__link">GitHub</a>
+      <span class="hub-footer__right font-mono">Apache 2.0 · v0.1-alpha</span>
+    </div>
+  </footer>
+
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>

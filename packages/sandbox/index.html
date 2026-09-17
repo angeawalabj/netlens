@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NetLens — Protocol Sandbox</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../ui/src/design-system/index.css">
+  <link rel="stylesheet" href="src/sandbox.css">
+</head>
+<body class="app-shell">
+
+  <!-- ── TOPBAR ─────────────────────────────────────── -->
+  <header class="topbar">
+    <a href="../hub/index.html" class="topbar__logo">
+      <div class="topbar__logo-mark">NL</div>
+      NetLens
+    </a>
+
+    <nav class="topbar__tabs">
+      <div class="topbar__tab topbar__tab--active">Sandbox</div>
+      <a href="../xray/index.html"  class="topbar__tab">X-Ray</a>
+      <a href="../quiz/index.html"  class="topbar__tab">Assessment</a>
+    </nav>
+
+    <div class="topbar__right">
+      <button class="btn btn--ghost btn--ghost--danger"
+              id="btnFault"
+              data-action="toggle-faults">
+        ⚡ Faults
+      </button>
+    </div>
+  </header>
+
+  <!-- ── WORKSPACE ──────────────────────────────────── -->
+  <div class="workspace sandbox-workspace">
+
+    <!-- LEFT — Protocol selector -->
+    <aside class="panel sidebar">
+      <div class="panel__bar">
+        <span class="panel__title">Protocols</span>
+      </div>
+
+      <div class="panel__body">
+        <div id="protoList"></div>
+      </div>
+
+      <!-- Session info -->
+      <div class="sidebar__session">
+        <div class="session-row">
+          <span class="session-key">Step</span>
+          <span class="session-val" id="sessStep">—</span>
+        </div>
+        <div class="session-row">
+          <span class="session-key">Phase</span>
+          <span class="session-val" id="sessPhase">—</span>
+        </div>
+        <div class="session-row">
+          <span class="session-key">Fault</span>
+          <span class="session-val" id="sessFault">none</span>
+        </div>
+        <div class="session-row">
+          <span class="session-key">RFC</span>
+          <span class="session-val" id="sessRFC">—</span>
+        </div>
+      </div>
+
+      <!-- Keyboard shortcuts -->
+      <div class="sidebar__shortcuts">
+        <div class="shortcut-title">Shortcuts</div>
+        <div class="shortcut-row">
+          <span class="shortcut-label">Next step</span>
+          <kbd>→</kbd>
+        </div>
+        <div class="shortcut-row">
+          <span class="shortcut-label">Prev step</span>
+          <kbd>←</kbd>
+        </div>
+        <div class="shortcut-row">
+          <span class="shortcut-label">Play / Pause</span>
+          <kbd>Space</kbd>
+        </div>
+        <div class="shortcut-row">
+          <span class="shortcut-label">Reset</span>
+          <kbd>R</kbd>
+        </div>
+        <div class="shortcut-row">
+          <span class="shortcut-label">Fault mode</span>
+          <kbd>F</kbd>
+        </div>
+        <div class="shortcut-row">
+          <span class="shortcut-label">Select protocol</span>
+          <kbd>1 – 5</kbd>
+        </div>
+      </div>
+    </aside>
+
+    <!-- CENTER — Flow visualization -->
+    <main class="panel main-panel">
+      <!-- Phase strip -->
+      <div class="phase-strip" id="phaseStrip"></div>
+
+      <!-- Flow canvas -->
+      <div class="flow-scroll">
+        <div id="flowArea"></div>
+      </div>
+
+      <!-- Controls -->
+      <div class="controls">
+        <button class="btn btn--secondary controls__btn"
+                id="btnReset"
+                data-action="reset"
+                title="Reset (R)">↺</button>
+
+        <button class="btn btn--secondary controls__btn"
+                id="btnPrev"
+                data-action="prev"
+                title="Previous (←)">‹</button>
+
+        <button class="btn btn--primary controls__btn controls__btn--play"
+                id="btnPlay"
+                data-action="play"
+                title="Play / Pause (Space)">▶</button>
+
+        <button class="btn btn--secondary controls__btn"
+                id="btnNext"
+                data-action="next"
+                title="Next (→)">›</button>
+
+        <div class="controls__progress">
+          <div class="controls__track">
+            <div class="controls__fill" id="ctrlFill"></div>
+          </div>
+          <div class="controls__label font-mono" id="ctrlLabel">
+            Select a protocol to begin
+          </div>
+        </div>
+
+        <div class="controls__speeds">
+          <button class="speed-btn font-mono"
+                  data-action="set-speed"
+                  data-speed="2000">0.5×</button>
+          <button class="speed-btn speed-btn--active font-mono"
+                  data-action="set-speed"
+                  data-speed="1000">1×</button>
+          <button class="speed-btn font-mono"
+                  data-action="set-speed"
+                  data-speed="500">2×</button>
+          <button class="speed-btn font-mono"
+                  data-action="set-speed"
+                  data-speed="250">4×</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- RIGHT — Inspector -->
+    <aside class="panel inspector-panel">
+      <div class="panel__bar">
+        <span class="panel__title">Packet Inspector</span>
+        <span class="panel__count font-mono text-accent" id="inspectorProto"></span>
+      </div>
+      <div class="panel__body" id="inspectorBody"></div>
+    </aside>
+
+  </div><!-- /workspace -->
+
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>

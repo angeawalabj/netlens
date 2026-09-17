@@ -1,0 +1,7 @@
+{
+  "name": "@netlens/sandbox",
+  "version": "0.1.0",
+  "description": "Protocol Sandbox — interactive step-by-step protocol simulator",
+  "private": true,
+  "type": "module"
+}
